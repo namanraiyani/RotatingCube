@@ -1,74 +1,122 @@
-# RotatingCube
+# Rotating Cube
+A terminal-based 3D cube renderer built with Python. It uses ASCII characters to animate a spinning cube with realistic depth, rotation, and lighting effects.
 
-![simplescreenrecorder](https://github.com/user-attachments/assets/8b0a76e5-27aa-4e2e-aa92-988778eeb80e)
+----------
 
-This Python script renders a spinning 3D cube directly in the terminal. It's an introduction to the fundamental concepts of 3D computer graphics.
+## Overview
+This project is a simple introduction to 3D graphics. It covers the basics of 3D rotation, perspective projection, and lighting — all rendered directly in your terminal using text.
 
-## Purpose: An Introduction to 3D Graphics
+Originally built to demonstrate edge connections and cube rotation, the project now includes basic lighting and shading based on surface normals and light direction.
 
-The main goal of this project is to get a hands-on learning experience about how 3D graphics work.
+----------
 
-## The Math
+## Key Concepts
 
-At its core, making a 3D object appear on a 2D screen involves two main steps: rotating the object in 3D space and then projecting it onto the 2D screen.
+### 3D Rotation
+Each vertex of the cube is rotated around the X, Y, and Z axes using standard rotation matrices. This creates the spinning effect as the cube is animated over time.
 
-### Vertices and Edges: 
+### Perspective Projection
+Once rotated, each 3D point is projected onto a 2D plane to simulate depth. Objects farther away appear smaller, mimicking how we see things in the real world.
 
-*   **Vertices:** The corners of the cube. In this code, `vertices` is a list of points, where each point has an X, Y, and Z coordinate. These coordinates define the cube's position in a 3D space.
-*   **Edges:** These are the lines that connect the corners (vertices) of the cube.
+### Lighting & Shading (New)
+Each face of the cube is shaded based on:
 
-### Rotating the Cube in 3D Space
+-   The angle between the face and the light source
+    
+-   The distance from the light source
+    
 
-To make the cube spin, we need to continuously update the position of its vertices. This is done using a mathematical tool called a **rotation matrix**. A rotation matrix is a grid of numbers that, when applied to a point's coordinates, gives you its new coordinates after being rotated around a certain axis.
+This gives the cube a more three-dimensional appearance, with light-facing surfaces appearing brighter and others darker.
 
-Our `rotate` function does exactly this. It takes a point's `(x, y, z)` coordinates and rotation angles for each axis (`ax`, `ay`, `az`) and calculates the new position.
+----------
 
-#### The Rotation Formula
+## ASCII Shading
 
-The code combines rotations around the X, Y, and Z axes into one matrix:
+The shading is displayed using a small set of ASCII characters, ordered from light to dark:
 
-*   **Rotation around the X-axis (Roll):**
-    ```
-      [ 1,  0,       0      ]
-      [ 0,  cos(θ), -sin(θ) ]
-      [ 0,  sin(θ),  cos(θ) ]
-    ```
-*   **Rotation around the Y-axis (Pitch):**
-    ```
-      [ cos(β),  0,  sin(β) ]
-      [ 0,       1,  0      ]
-      [-sin(β),  0,  cos(β) ]
-    ```
-*   **Rotation around the Z-axis (Yaw):**
-    ```      [ cos(α), -sin(α), 0 ]
-      [ sin(α),  cos(α), 0 ]
-      [ 0,       0,      1 ]
-    ```
-The script's `rotation_matrix` is a combination of these principles to apply rotation around all three axes simultaneously.
+```
+* 0 @ #
+```
+Each character is chosen based on the calculated light intensity on that face.
 
-### Projecting a 3D Object onto a 2D Screen
+----------
+## Math
 
-Once our cube is rotated in its 3D world, we need to figure out how to represent it on our flat 2D screen. This is where **perspective projection** comes in.
+### Rotation Matrices
 
-Think about how you see the world. Objects that are farther away appear smaller, and objects that are closer look bigger. Perspective projection mimics this effect.
+Each cube vertex is rotated in 3D space using combined rotation matrices for the X, Y, and Z axes.
 
-#### The Projection Formula
+-   **Rotation around X-axis** (Roll):
+    
+		   `[ 1	0	 	 0 		]`
+		   `[ 0	cos(θ)	-sin(θ) ]`
+		   `[ 0	sin(θ)	 cos(θ) ]` 
+    
+-   **Rotation around Y-axis** (Pitch):
+    
+		    `[ cos(β)		0	 sin(β) ]`
+		    `[ 0			1	 0 		]`
+		    `[ -sin(β)	0	 cos(β) 	]` 
+		    
+-   **Rotation around Z-axis** (Yaw):
+    
+		   `[ cos(α)		-sin(α)		0 ]`
+		   `[ sin(α)		cos(α)		0 ]`
+		   `[ 0				1 			0 ]`
+    
 
-Our `project` function uses a simple formula to achieve this:
+These are combined into a single rotation matrix applied to each 3D point.
 
-*   `projected_x = (width / 2) + (x * scale) / (z + distance)`
-*   `projected_y = (height / 2) - (y * scale) / (z + distance)`
+----------
 
-Let's break it down:
+### Perspective Projection
 
-*   `(width / 2)` and `(height / 2)` are used to center the object on our screen.
-*   `x * scale` and `y * scale` are used to make the object larger or smaller.
-*   The most important part is dividing by `(z + distance)`. The `z` coordinate represents how "deep" into the screen the point is. By dividing by a value related to `z`, points with a larger `z` (farther away) will have their `x` and `y` values reduced, making them appear smaller and closer to the center of the screen. This creates the illusion of depth.
+To simulate depth, 3D coordinates are projected to 2D using this formula:
 
-## Code Overview
+`projected_x = (width / 2) + (x * scale * aspect_ratio) / (z + distance)
+projected_y = (height / 2) - (y * scale) / (z + distance)` 
 
-*   **`rotate(x, y, z, ax, ay, az)`**: Takes a 3D point and rotation angles and returns the new coordinates of the point after rotation.
-*   **`project(x, y, z, width, height, scale, distance)`**: Takes a 3D point and converts it into 2D coordinates for our screen.
-*   **`draw_points(screen)`**: Calculates the 2D projection for each vertex of the cube.
-*   **`draw_edges(screen, edges, projected)`**: Draws the lines (edges) between the projected vertices on the screen using ASCII characters.
-*   **The `while True` loop**: This is the main part of our program. It continuously clears the screen, rotates the cube, projects it, draws it, and then waits for a very short period before repeating. This rapid redrawing creates the smooth animation of a spinning cube.
+-   `width` and `height`: Terminal screen size
+    
+-   `scale`: Controls overall size
+    
+-   `z + distance`: Ensures that closer points appear larger
+
+----------
+
+### Surface Normals
+
+Each face has a surface normal calculated using the cross product of two vectors formed by its vertices:
+
+`normal = np.cross(v2 - v1, v3 - v1)` 
+
+The normal vector is then normalized (scaled to unit length) and used to determine how much light hits the face.
+
+----------
+
+### Light Intensity
+
+Lighting is based on Lambertian reflection, where intensity is proportional to the cosine of the angle between the light direction and the face normal.
+
+
+`intensity = (dot(normal, light_dir) / distance^1.5) * 3` 
+
+-   `dot(normal, light_dir)`: Measures how directly the face faces the light
+    
+-   `distance^1.5`: Dims light based on distance
+    
+-   The intensity is clamped between 0 and 1 and mapped to an ASCII character
+----------
+## How It Works
+
+-   `rotate()` – Rotates a 3D point around all three axes.
+    
+-   `project()` – Converts 3D coordinates to 2D screen space.
+    
+-   `get_normal()` – Calculates the normal vector for a face.
+    
+-   `get_intensity()` – Determines how bright a face should be based on light direction and distance.
+    
+-   `fill_face()` – Fills each cube face with the appropriate ASCII character based on intensity.
+    
+-   `draw_edges()` – Draws the cube's wireframe over the shaded faces.
