@@ -3,7 +3,7 @@ A terminal-based 3D cube renderer built with Python. It uses ASCII characters to
 
 ----------
 
-https://github.com/user-attachments/assets/13e98e01-93d6-4e2b-8320-e0868ce8232e
+![vid3-(3) (online-video-cutter com)](https://github.com/user-attachments/assets/574aef57-a757-4451-a512-16acbbaa268a)
 
 ## Overview
 This project is a simple introduction to 3D graphics. It covers the basics of 3D rotation, perspective projection, and lighting — all rendered directly in your terminal using text.
