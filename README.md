@@ -3,6 +3,8 @@ A terminal-based 3D cube renderer built with Python. It uses ASCII characters to
 
 ----------
 
+https://github.com/user-attachments/assets/13e98e01-93d6-4e2b-8320-e0868ce8232e
+
 ## Overview
 This project is a simple introduction to 3D graphics. It covers the basics of 3D rotation, perspective projection, and lighting — all rendered directly in your terminal using text.
 
@@ -48,21 +50,21 @@ Each cube vertex is rotated in 3D space using combined rotation matrices for the
 
 -   **Rotation around X-axis** (Roll):
     
-		   `[ 1	0	 	 0 		]`
-		   `[ 0	cos(θ)	-sin(θ) ]`
-		   `[ 0	sin(θ)	 cos(θ) ]` 
+		   `[ 1, 0, 0]`
+		   `[ 0, cos(θ), -sin(θ) ]`
+		   `[ 0, sin(θ), cos(θ) ]` 
     
 -   **Rotation around Y-axis** (Pitch):
     
-		    `[ cos(β)		0	 sin(β) ]`
-		    `[ 0			1	 0 		]`
-		    `[ -sin(β)	0	 cos(β) 	]` 
+		    `[ cos(β), 0, sin(β) ]`
+		    `[ 0, 1, 0 ]`
+		    `[ -sin(β),	0,  cos(β) ]` 
 		    
 -   **Rotation around Z-axis** (Yaw):
     
-		   `[ cos(α)		-sin(α)		0 ]`
-		   `[ sin(α)		cos(α)		0 ]`
-		   `[ 0				1 			0 ]`
+		   `[ cos(α), -sin(α), 0 ]`
+		   `[ sin(α), cos(α), 0 ]`
+		   `[ 0, 1, 0 ]`
     
 
 These are combined into a single rotation matrix applied to each 3D point.
